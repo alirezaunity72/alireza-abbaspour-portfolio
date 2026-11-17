@@ -1,0 +1,49 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import SectionRoutes from './SectionRoutes.astro';
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile } = getI18n(lang);
+
+/* Industrial experience — only confirmed entries exist in the data file.
+   Fields left empty render nothing. */
+---
+
+<section id="experience" class="section" aria-labelledby="experience-title">
+  <SectionRoutes variant={3} tone="signal" />
+
+  <div class="container relative z-10">
+    <SectionHeader
+      index="05"
+      label="EXPERIENCE — INDUSTRIAL"
+      id="experience-title"
+      title={profile.titles.experience}
+    />
+
+    <ol class="tl">
+      {
+        profile.experience.map((x) => (
+          <li class="tl-item" data-reveal>
+            <p class="mono-label">
+              {x.kind === 'internship' ? 'INTERNSHIP' : 'INDUSTRIAL'} · <span class="fa-ls">{x.dates}</span>
+            </p>
+            {x.title && <h3 class="tl-title">{x.title}</h3>}
+            <p class="tl-school">{x.org}</p>
+            {x.responsibilities.length > 0 && (
+              <ul class="tl-list">
+                {x.responsibilities.map((r) => (
+                  <li>{r}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

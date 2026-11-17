@@ -1,0 +1,53 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import SectionRoutes from './SectionRoutes.astro';
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile } = getI18n(lang);
+
+/* Global content rule: the contact section renders only when real data exists.
+   No CV button anywhere until a CV file is provided. */
+const socials = profile.socials.filter((s) => s.href);
+const hasContact = Boolean(profile.email || socials.length);
+---
+
+{
+  hasContact && (
+    <section id="contact" class="section" aria-labelledby="contact-title">
+      <SectionRoutes variant={1} tone="signal" />
+
+      <div class="container relative z-10">
+        <SectionHeader
+          index="06"
+          label="CONTACT"
+          id="contact-title"
+          title={profile.titles.contact}
+        />
+
+        <div class="grid gap-10 lg:grid-cols-2 items-start">
+          {profile.email && (
+            <div data-reveal>
+              <p class="mono-label">EMAIL</p>
+              <a class="contact-email" href={`mailto:${profile.email}`}>{profile.email}</a>
+            </div>
+          )}
+
+          {socials.length > 0 && (
+            <div class="flex flex-col gap-4" data-reveal>
+              {socials.map((s) => (
+                <a class="btn justify-between" href={s.href} target="_blank" rel="noopener noreferrer">
+                  {s.label} ↗
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}

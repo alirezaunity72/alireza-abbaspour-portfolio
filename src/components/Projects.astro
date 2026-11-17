@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
+import SectionRoutes from './SectionRoutes.astro';
+
+/* Renders nothing while there are no real projects — no placeholders, no
+   empty-state card. Adding src/content/projects/<name>.md brings the
+   section, its nav link and the hero CTA back automatically. */
+const projects = (await getCollection('projects')).sort(
+  (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999)
+);
+---
+
+{
+  projects.length > 0 && (
+    <section id="projects" class="section" aria-labelledby="projects-title">
+      <SectionRoutes variant={4} tone="signal" />
+
+      <div class="container relative z-10">
+        {/* Dormant until real projects exist; numbered 05 when it lands. */}
+        <SectionHeader index="05" label="PROJECTS" id="projects-title" title="Selected work" />
+
+        <div class="grid gap-6 md:grid-cols-2">
+          {projects.map((p) => (
+            <article class="card" data-reveal>
+              {p.data.image ? (
+                <img src={p.data.image} alt={`${p.data.title} — preview`} loading="lazy" />
+              ) : (
+                <div class="no-signal"><span>NO SIGNAL — IMAGE PENDING</span></div>
+              )}
+
+              <div class="p-6 md:p-7">
+                <div class="flex flex-wrap items-center gap-2">
+                  {p.data.status === 'in-progress' && <span class="chip chip--accent">in progress</span>}
+                  {p.data.status === 'completed' && <span class="chip chip--accent">completed</span>}
+                  {p.data.stack.map((t) => (
+                    <span class="pin">{t}</span>
+                  ))}
+                </div>
+
+                <h3 class="card-title">{p.data.title}</h3>
+                <p class="card-summary">{p.data.summary}</p>
+
+                {p.data.github && (
+                  <div class="flex flex-wrap gap-3 mt-6">
+                    <a class="btn" href={p.data.github} target="_blank" rel="noopener noreferrer">
+                      GitHub ↗
+                    </a>
+                  </div>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

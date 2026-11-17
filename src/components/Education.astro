@@ -1,0 +1,49 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import SectionRoutes from './SectionRoutes.astro';
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile } = getI18n(lang);
+---
+
+<section id="education" class="section" aria-labelledby="education-title">
+  <SectionRoutes variant={3} tone="signal" />
+
+  <div class="container relative z-10">
+    <SectionHeader
+      index="02"
+      label="EDUCATION"
+      id="education-title"
+      title={profile.titles.education}
+    />
+
+    <ol class="tl">
+      {
+        profile.education.map((e) => (
+          <li
+            class:list={[
+              'tl-item',
+              { 'tl-item--future': e.state === 'future', 'tl-item--muted': e.state === 'placeholder' },
+            ]}
+            data-reveal
+          >
+            <p class="mono-label">
+              <span class="fa-ls">{e.dates}</span>
+              {e.gpa && <span class="chip chip--accent chip-gap">GPA · {e.gpa}</span>}
+              {e.state === 'future' && <span class="chip chip--dashed chip--intel chip-gap">next stage</span>}
+              {e.state === 'placeholder' && <span class="chip chip--dashed chip-gap">details pending</span>}
+            </p>
+            <h3 class="tl-title">{e.degree}</h3>
+            <p class="tl-school">{e.school}</p>
+            {e.note && <p class="tl-note">{e.note}</p>}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

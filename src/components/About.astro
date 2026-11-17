@@ -1,0 +1,40 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import SectionRoutes from './SectionRoutes.astro';
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile } = getI18n(lang);
+---
+
+<section id="about" class="section" aria-labelledby="about-title">
+  <SectionRoutes variant={2} tone="signal" />
+
+  <div class="container relative z-10">
+    <SectionHeader index="01" label="ABOUT" id="about-title" title={profile.titles.about} />
+
+    <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14 items-start">
+      <div class="prose" data-reveal>
+        {profile.intro.map((p) => <p>{p}</p>)}
+      </div>
+
+      <aside class="card p-6 md:p-7 datasheet" data-reveal>
+        <p class="mono-label" style="margin-bottom:1.2rem"><span class="mono-accent">DATA</span> // SHEET</p>
+        <dl>
+          <dt>Now</dt>
+          <dd>{profile.datasheet.now}</dd>
+          <dt>University</dt>
+          <dd>{profile.datasheet.university}</dd>
+          <dt>Base</dt>
+          <dd>{profile.base}</dd>
+          <dt>Focus</dt>
+          <dd>{profile.datasheet.focus}</dd>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>

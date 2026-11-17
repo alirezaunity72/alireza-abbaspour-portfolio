@@ -1,0 +1,106 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/space-grotesk';
+import '@fontsource-variable/jetbrains-mono';
+import '@fontsource-variable/vazirmatn';
+import '../styles/global.css';
+
+import { getI18n, type Lang } from '../data/i18n';
+import SiteHeader from '../components/SiteHeader.astro';
+import RoutingGrid from '../components/RoutingGrid.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Education from '../components/Education.astro';
+import Research from '../components/Research.astro';
+import Projects from '../components/Projects.astro';
+import Skills from '../components/Skills.astro';
+import Experience from '../components/Experience.astro';
+import Contact from '../components/Contact.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { dir, site, profile, ui } = getI18n(lang);
+
+/* Canonical/OG/hreflang URL only renders once a real domain is set in profile.ts. */
+const hasSiteUrl = Boolean(site.url);
+const pageUrl = hasSiteUrl ? (lang === 'fa' ? `${site.url}/fa/` : site.url) : '';
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  jobTitle: ui.schemaJobTitle,
+  affiliation: {
+    '@type': 'CollegeOrUniversity',
+    name: ui.schemaAffiliation,
+  },
+  knowsAbout: profile.interests,
+  ...(pageUrl ? { url: pageUrl } : {}),
+};
+---
+
+<!doctype html>
+<html lang={lang} dir={dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <title>{site.title}</title>
+    <meta name="description" content={site.description} />
+    {
+      hasSiteUrl && (
+        <>
+          <link rel="canonical" href={pageUrl} />
+          <link rel="alternate" hreflang="en" href={site.url} />
+          <link rel="alternate" hreflang="fa" href={`${site.url}/fa/`} />
+          <link rel="alternate" hreflang="x-default" href={site.url} />
+        </>
+      )
+    }
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0a0c" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={site.title} />
+    <meta property="og:description" content={site.description} />
+    <meta property="og:locale" content={lang === 'fa' ? 'fa_IR' : 'en_US'} />
+    {hasSiteUrl && <meta property="og:url" content={pageUrl} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={site.title} />
+    <meta name="twitter:description" content={site.description} />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personLd)} />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{ui.skip}</a>
+
+    <div class="scroll-progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+    <RoutingGrid />
+    <SiteHeader lang={lang} />
+
+    <main id="main" tabindex="-1">
+      <Hero lang={lang} />
+      <About lang={lang} />
+      <Education lang={lang} />
+      <Skills lang={lang} />
+      <Research lang={lang} />
+      <Projects />
+      <Experience lang={lang} />
+      <Contact lang={lang} />
+    </main>
+
+    <SiteFooter lang={lang} />
+
+    <script>
+      import '../scripts/motion/index';
+    </script>
+  </body>
+</html>

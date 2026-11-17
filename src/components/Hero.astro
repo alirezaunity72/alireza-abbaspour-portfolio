@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import SectionRoutes from './SectionRoutes.astro';
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile, ui } = getI18n(lang);
+
+const hasProjects = (await getCollection('projects')).length > 0;
+---
+
+<section id="hero" class="hero" aria-label={ui.heroLabel}>
+  <SectionRoutes variant={1} tone="signal" />
+
+  <!-- Binary rain: full-hero background, behind all content -->
+  <canvas id="hero-rain" class="hero-rain" aria-hidden="true"></canvas>
+  <!-- Readability scrim: darkens the text side + edges without hiding the rain -->
+  <div class="hero-scrim" aria-hidden="true"></div>
+
+  <div class="container relative z-10">
+    <p class="mono-label kicker" data-reveal>
+      <span class="mono-accent">//</span>
+      <span class="fa-ls">{profile.kicker}</span>
+    </p>
+
+    <h1 class="hero-name" data-reveal>{profile.name}</h1>
+
+    <p class="hero-headline" data-reveal>{profile.headline}</p>
+
+    {
+      hasProjects && (
+        <div class="flex flex-wrap gap-4 mt-10" data-reveal>
+          <a class="btn btn--primary" href="#projects">{profile.ctaProjects}</a>
+        </div>
+      )
+    }
+
+    <ul class="hero-meta" data-reveal>
+      {profile.interests.slice(0, 5).map((i) => <li>{i}</li>)}
+    </ul>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">{ui.scrollHint}</div>
+</section>

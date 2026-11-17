@@ -1,0 +1,27 @@
+---
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile } = getI18n(lang);
+
+const year = new Date().getFullYear();
+/* FA version renders the year in Persian digits. */
+const yearText =
+  lang === 'fa' ? String(year).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]) : String(year);
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p class="chain">
+      INPUT <b>→</b> PROCESS <b>→</b> <span class="mono-accent">OUTPUT</span> — SIGNAL COMPLETE
+    </p>
+    <p class="footer-meta">
+      © {yearText} <span class="fa-ls">{profile.name}</span>
+      <span>Built with Astro · GSAP · Tailwind</span>
+    </p>
+  </div>
+</footer>

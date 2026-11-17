@@ -1,0 +1,39 @@
+---
+/**
+ * Layer B of the FPGA routing grid: per-section decorative traces.
+ * Manhattan-style routes (90° bends) drawn in a percent-based viewBox with
+ * `preserveAspectRatio="none"` + `vector-effect: non-scaling-stroke`, so
+ * lines stay crisp 1.5px at any size. GSAP draws them via stroke-dashoffset
+ * as the section scrolls in (see src/scripts/motion/scroll.ts).
+ */
+interface Props {
+  variant?: 1 | 2 | 3 | 4;
+  tone?: 'signal' | 'intel';
+}
+
+const { variant = 1, tone = 'signal' } = Astro.props;
+
+const paths: Record<number, string[]> = {
+  1: ['M0,16 H36 V40 H70 V62 H100', 'M36,40 V84 H62'],
+  2: ['M0,66 H28 V30 H64 V12 H100'],
+  3: ['M100,28 H66 V56 H32 V82 H0'],
+  4: ['M0,84 H34 V54 H68 V22 H100', 'M68,54 V78 H86'],
+};
+
+const nodes: Record<number, number[][]> = {
+  1: [[36, 40], [70, 62]],
+  2: [[64, 12]],
+  3: [[32, 82]],
+  4: [[68, 54]],
+};
+---
+
+<svg
+  class:list={['route-svg', tone === 'intel' && 'route-svg--intel']}
+  viewBox="0 0 100 100"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+>
+  {paths[variant].map((d) => <path class="route-path" data-route d={d} />)}
+  {nodes[variant].map(([x, y]) => <rect class="route-node" x={x - 0.8} y={y - 0.8} width="1.6" height="1.6" />)}
+</svg>

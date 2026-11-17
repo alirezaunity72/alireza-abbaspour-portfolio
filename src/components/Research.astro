@@ -1,0 +1,41 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import SectionRoutes from './SectionRoutes.astro';
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile } = getI18n(lang);
+
+/* Minimal research-interest grid: area names only (English in both
+   language versions) — no descriptions, by user request. */
+---
+
+<section id="research" class="section" aria-labelledby="research-title">
+  <SectionRoutes variant={2} tone="intel" />
+
+  <div class="container relative z-10">
+    <SectionHeader
+      index="04"
+      label="RESEARCH INTERESTS"
+      id="research-title"
+      title={profile.titles.research}
+    />
+
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {
+        profile.research.map((r) => (
+          <article class:list={['card', 'p-6', r.tone === 'intel' && 'card--intel']} data-reveal>
+            <p class="mono-label">
+              <span class:list={[r.tone === 'intel' ? 'mono-accent--intel' : 'mono-accent']}>{r.index}</span> // INTEREST
+            </p>
+            <h3 class="card-title">{r.title}</h3>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

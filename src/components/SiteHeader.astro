@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import { getI18n, type Lang } from '../data/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const { profile, ui } = getI18n(lang);
+
+/* Nav adapts to available content: sections with no confirmed data are omitted. */
+const hasProjects = (await getCollection('projects')).length > 0;
+
+const links = [
+  { href: '#about', label: profile.nav.about },
+  { href: '#education', label: profile.nav.education },
+  { href: '#skills', label: profile.nav.skills },
+  { href: '#research', label: profile.nav.research },
+  ...(hasProjects ? [{ href: '#projects', label: profile.nav.projects }] : []),
+  ...(profile.experience.length ? [{ href: '#experience', label: profile.nav.experience }] : []),
+  ...(profile.email ? [{ href: '#contact', label: profile.nav.contact }] : []),
+];
+---
+
+<header id="site-header" class="site-header">
+  <div class="container header-inner">
+    <a href="#hero" class="logo">~/<span>{profile.name}</span></a>
+
+    <div class="header-actions">
+      <nav class="main-nav" aria-label={ui.navPrimary}>
+        {links.map((l) => <a class="nav-link" href={l.href}>{l.label}</a>)}
+      </nav>
+
+      <div class="lang-switch" role="group" aria-label={ui.langSwitch}>
+        <a
+          href="/"
+          class:list={['lang-link', lang === 'en' && 'is-active']}
+          aria-current={lang === 'en' ? 'true' : undefined}
+          hreflang="en"
+          lang="en"
+        >
+          English
+        </a>
+        <span class="lang-sep" aria-hidden="true">|</span>
+        <a
+          href="/fa/"
+          class:list={['lang-link', lang === 'fa' && 'is-active']}
+          aria-current={lang === 'fa' ? 'true' : undefined}
+          hreflang="fa"
+          lang="fa"
+        >
+          <span class="fa-label">فارسی</span>
+        </a>
+      </div>
+
+      <button
+        id="menu-toggle"
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={ui.menuOpen}
+        data-label-open={ui.menuOpen}
+        data-label-close={ui.menuClose}
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-menu" class="mobile-menu container" aria-label={ui.navMobile} hidden>
+    {links.map((l) => <a class="nav-link" href={l.href}>{l.label}</a>)}
+  </nav>
+</header>
