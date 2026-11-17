@@ -20,7 +20,7 @@ export const site: SiteMeta = {
   title: 'Alireza Abbaspour — M.Sc. Student in Digital Electronics (IUST)',
   description:
     'M.Sc. student in Digital Electronics at Iran University of Science and Technology (IUST), interested in AI hardware and computer architecture — FPGA, VHDL, DSP and digital systems.',
-  url: 'https://ali-abbaspour.pages.dev', // canonical/OG/hreflang base — Cloudflare Pages production domain
+  url: 'https://alirezaunity72.github.io', // canonical/OG/hreflang base — GitHub Pages (accessible from Iran)
 };
 
 /* ── Shared shapes (mirrored by profile-fa.ts) ───────────────────────── */

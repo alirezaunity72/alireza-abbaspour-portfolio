@@ -315,6 +315,63 @@ User request (both language versions):
 - Known state: repo is direct-upload Pages (not Git-connected) — future
   updates = build + `wrangler pages deploy` (OAuth session persists).
 
+## IRAN ACCESSIBILITY DIAGNOSIS (VPN OFF, 2026-11-17)
+
+- User reported suspected blocking of ali-abbaspour.pages.dev from Iranian
+  internet. Structured diagnosis run from the user's own connection
+  (curl + nslookup + Resolve-DnsName, VPN confirmed off).
+- DNS layer: every resolver (system, Google 8.8.8.8, Cloudflare 1.1.1.1,
+  Shecan 178.22.122.100, AdGuard) returned the ISP blackhole
+  10.10.34.36 (embedded as 2001:4188:2:600:10:10:34:36) for all
+  *.pages.dev names — transparent UDP/53 interception.
+- Decisive layer: DNS-over-TCP (`nslookup -vc`) against 8.8.8.8 revealed the
+  TRUE Cloudflare A records (172.66.44.243 / 172.66.47.13). Pinned TLS to
+  those real IPs still reset the handshake for both the site and the control
+  demo.pages.dev → SNI-level filtering of the pages.dev suffix. No DNS
+  workaround can help ordinary visitors; only a different domain/host helps.
+  (dns.google and cloudflare-dns.com DoH endpoints themselves timed out.)
+- Hosts tested from the same connection: github.io 200 OK (real
+  185.199.108.153), codeberg.page 200 OK, github.com 200,
+  cloudflare.com 200 (block is suffix-specific, not all-Cloudflare);
+  vercel.app reachable but excluded by user instruction; netlify.app and
+  gitlab.io FILTERED (TCP timeout); x.com filtered (control).
+- In-app browser on the same network: ERR_TUNNEL_CONNECTION_FAILED for
+  pages.dev — browser-level confirmation.
+
+## GITHUB PAGES MIGRATION (production, canonical)
+
+- Approved by user ("yes"). Canonical/OG/hreflang `url` in profile.ts +
+  profile-fa.ts and astro.config.mjs `site` switched to
+  https://alirezaunity72.github.io (root user-site repo → no path/base
+  changes needed for /, /fa/, /_astro/).
+- Production build PASS; dist canonical/hreflang verified github.io, zero
+  stale pages.dev refs in either HTML.
+- New public repo `alirezaunity72/alirezaunity72.github.io` created via
+  `gh repo create --source . --push` from a clean deploy dir containing
+  dist/* + `.nojekyll` (required so GitHub serves `/_astro/` assets instead
+  of running Jekyll). Root commit `bdac941`, branch `main`.
+- Pages auto-enabled at repo creation (API returned 409 already-enabled;
+  config verified: build_type legacy, branch main, path /). Site live ~70s
+  after push.
+- LIVE VERIFICATION on https://alirezaunity72.github.io (from the same
+  VPN-off connection):
+  EN default at / (200), FA at /fa/ (200, RTL), switcher "English | فارسی",
+  7 skill cards both languages (FA «برنامه‌نویسی C» flag confirmed again as
+  substring false-positive of «برنامه‌نویسی CNC»; element-exact check: no
+  standalone C card), hero clean, canonical tags github.io, mailto link,
+  order Education→Skills→Research→Experience→Contact, education h2s
+  (Education / سوابق تحصیلی), 0 console errors, 0 horizontal overflow at
+  375/390/768/1024 on both versions, Lighthouse 100/100/100.
+- Hosting state: canonical/production = GitHub Pages (accessible from Iran
+  without VPN). Cloudflare Pages copy (ali-abbaspour.pages.dev) remains
+  deployed but is ISP-blocked in Iran; kept as non-Iran mirror, not
+  canonical. Future updates: build + push to alirezaunity72.github.io repo
+  (and optionally redeploy the pages.dev mirror).
+- Optional later: custom domain (paid) would escape suffix-filtering
+  entirely; only if user asks. Suggested user spot-check from phone on
+  mobile data, Wi-Fi off (ISP variance).
+
+
 
 
 

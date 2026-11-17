@@ -20,7 +20,7 @@ export const site = {
   title: 'علیرضا عباس‌پور — دانشجوی کارشناسی ارشد الکترونیک دیجیتال (IUST)',
   description:
     'دانشجوی کارشناسی ارشد الکترونیک دیجیتال در دانشگاه علم و صنعت ایران (IUST)، علاقه‌مند به سخت‌افزار هوش مصنوعی و معماری کامپیوتر — FPGA، VHDL، DSP و سامانه‌های دیجیتال.',
-  url: 'https://ali-abbaspour.pages.dev', // canonical/OG/hreflang base — Cloudflare Pages production domain
+  url: 'https://alirezaunity72.github.io', // canonical/OG/hreflang base — GitHub Pages (accessible from Iran)
 };
 
 /* ── Identity ────────────────────────────────────────────────────────── */
