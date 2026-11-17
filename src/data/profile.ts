@@ -20,7 +20,7 @@ export const site: SiteMeta = {
   title: 'Alireza Abbaspour — M.Sc. Student in Digital Electronics (IUST)',
   description:
     'M.Sc. student in Digital Electronics at Iran University of Science and Technology (IUST), interested in AI hardware and computer architecture — FPGA, VHDL, DSP and digital systems.',
-  url: '', // set to the final public domain (e.g. *.pages.dev) after Cloudflare Pages setup — canonical/OG/hreflang activate then
+  url: 'https://ali-abbaspour.pages.dev', // canonical/OG/hreflang base — Cloudflare Pages production domain
 };
 
 /* ── Shared shapes (mirrored by profile-fa.ts) ───────────────────────── */

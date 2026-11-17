@@ -284,5 +284,37 @@ User request (both language versions):
   server (7 cards, C Programming and «برنامه‌نویسی C» absent everywhere,
   remaining skills + titles + order + hero cleanup unchanged).
 
+## GITHUB + CLOUDFLARE PAGES DEPLOYMENT (production, public)
+
+- Plan switched by user: GitHub repo + Cloudflare Pages (no Vercel — the
+  Vercel device-login flow was cancelled and abandoned).
+- Language switcher changed to display exactly "English | فارسی" per user
+  requirement (`.fa-label` rule added: letter-spacing 0 for the Persian word).
+- Mobile polish: `.contact-email` given `overflow-wrap: anywhere` — fixed a
+  9px horizontal overflow at 375–390px on both versions (long unbreakable
+  email). Verified 0px overflow at 375/390/768/1024 on EN and FA.
+- Repo `alirezaunity72/alireza-abbaspour-portfolio` (public) created via
+  `gh` browser device-flow auth; initial commit `89c5771` pushed to `main`.
+- Canonical/OG/hreflang set to the final domain https://ali-abbaspour.pages.dev
+  (profile.ts, profile-fa.ts, astro.config.mjs `site`).
+- `public/robots.txt` added (User-agent: * / Allow: /) — clears the only
+  Lighthouse SEO finding.
+- Classic Cloudflare Pages project `ali-abbaspour` created with
+  `wrangler pages project create --force` (wrangler 4.164 delegated by default
+  to the new Workers-based flow which tried to switch the project to an SSR
+  adapter — rejected; static output preserved). Deployed via
+  `wrangler pages deploy dist --project-name ali-abbaspour --branch main`.
+- LIVE VERIFICATION on https://ali-abbaspour.pages.dev:
+  EN default at / (200), FA at /fa/ (200, RTL), switcher round-trips,
+  7 skill cards both languages (C Programming absent; the earlier FA
+  «برنامه‌نویسی C» flag was a substring false-positive inside
+  «برنامه‌نویسی CNC»), hero clean (no buttons/links), B.Sc./M.Sc. education,
+  order Education→Skills→Research→Experience→Contact, mailto contact link,
+  0 console errors, 0 horizontal overflow at 375/390/768/1024,
+  Lighthouse: Accessibility 100 / Best Practices 100 / SEO 100.
+- Known state: repo is direct-upload Pages (not Git-connected) — future
+  updates = build + `wrangler pages deploy` (OAuth session persists).
+
+
 
 
